@@ -9,8 +9,9 @@ $username = $configDB['username'];
 $pass = $configDB['password'];
 
 
-// Tworzymy nowe połączenie
-$conn = new PDO("mysql:host=$servername".";dbname=$dbName" . ",$username, $pass");
+
+
+$conn = new PDO("mysql:host=$servername;dbname=$dbName", "$username", "$pass");
 // Sprawdzamy czy połączcenie się udało
 if (!$conn) {
     die("Polaczenie nieudane.");

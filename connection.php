@@ -17,6 +17,4 @@ if (!$conn) {
 }
 
 
-//setting connections for Models
-
 ?>

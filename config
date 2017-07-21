@@ -1,0 +1,8 @@
+<?php
+
+$configDB = array(
+    'servername' => "localhost",
+    'username' => "root",
+    'password' => "coderslab",
+    'baseName' => "shop"
+);

@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<dataset>
+    <table name="Items">
+        <column>id</column>
+        <column>name</column>
+        <column>description</column>
+        <column>quantity</column>
+        <!--<column>group_id</column>-->
+        <column>price</column>
+        <row>
+            <value>1</value>
+            <value>Zelazko</value>
+            <value>Elegancko prasuje</value>
+            <value>5</value>
+            <!--<value>1</value>-->
+            <value>100</value>
+        </row>
+    </table>
+
+</dataset>

@@ -4,40 +4,44 @@ include __DIR__.'/../connection.php';
 
 Class Items{
 
+    static private $conn;
     private $id;
     private $name;
     private $price;
     private $description;
     private $quantity;
-    private $groupId
+    private $groupId;
 
     /**
      * Items constructor.
      */
-    public function __construct($name = "", $price = null, $description = "", $quantity = null, $group_id = null )
+    public function __construct($name = "", $price = null, $description = "", $quantity = null, $groupId = null )
     {
         $this->id = -1;
         $this->setName($name);
         $this->setPrice($price);
         $this->setDescription($description);
         $this->setQuantity($quantity);
+        $this->setGroupId($groupId);
     }
 
 
     //Methods
 
-
+    public static function SetConnection($conn){
+        Items::$conn = $conn;
+    }
     public function saveToDB(PDO $conn)
     {
         if($this->id = -1){
             $sql = 'INSERT INTO Items(name, price, description, quantity, group_id) VALUES(:name, :price, :description, :quantity, :group_id)';
-            $stmt = $conn->query($sql);
+            $stmt = Items::$conn->query($sql);
             $result = $stmt->execute([
                 'name'=>$this->getName(),
                 'price'=>$this->getPrice(),
                 'description'=>$this->getDescription(),
                 'quantity'=>$this->getQuantity(),
-                'group_id'=>$this->groupId()
+                'group_id'=>$this->getGroupId()
             ]);
             if($result !== false){
                 $this->id = $conn->lastInsertId();
@@ -45,7 +49,7 @@ Class Items{
             }
         }else{
             $sql = 'UPDATE Items SET name=:name, price=:price, description=:description, quantity=:quantity, group_id=:group_id WHERE id=:id';
-            $stmt = $conn->prepare($sql);
+            $stmt = Items::$conn->prepare($sql);
             $result = $stmt->execute([
                 'id'=>$this->id,
                 'name'=>$this->name,
@@ -65,8 +69,8 @@ Class Items{
     public function deleteFromDB(PDO $conn, $id){
         if($this->id != -1){
             $sql = 'DELETE FROM Items WHERE id=:id';
-            $stmt = $conn->prepare($sql);
-            $result = $stmt->execute('id'=>$id);
+            $stmt = Items::$conn->prepare($sql);
+            $result = $stmt->execute(['id'=>$id]);
 
             if($result === true){
                 $this->id = -1;
@@ -76,9 +80,9 @@ Class Items{
         return FALSE;
     }
 
-    public function loadItemsById(PDO $conn, $id)
+    public function loadItemsById($id)
     {
-        $stmt=$conn->prepare('SELECT * FROM Items WHERE id=:id');
+        $stmt=Items::$conn->prepare('SELECT * FROM Items WHERE id=:id');
         $result=$stmt->execute(['id'=>$id]);
 
         if($result === true && $stmt->rowCount()>0){
@@ -97,10 +101,10 @@ Class Items{
         return NULL;
     }
 
-    public function loadAllItems(PDO $conn)
+    public static function loadAllItems()
     {
 
-        $result = $conn->query('SELECT * FROM Items');
+        $result = Items::$conn->query('SELECT * FROM Items');
         $res = [];
 
         if($result !== false && $result->rowCount()>0){
@@ -123,6 +127,22 @@ Class Items{
 
 
     //Getters and Setters
+    /**
+     * @return mixed
+     */
+    public function getGroupId()
+    {
+        return $this->groupId;
+    }
+
+    /**
+     * @param mixed $groupId
+     */
+    public function setGroupId($groupId)
+    {
+        $this->groupId = $groupId;
+    }
+
     /**
      * @return mixed
      */
@@ -202,5 +222,5 @@ Class Items{
     {
         $this->quantity = $quantity;
     }
-    
+
 }

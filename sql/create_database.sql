@@ -4,11 +4,12 @@
                         description text NOT NULL,
                         quantity INT,
                         group_id INT NULL,
+                        price decimal(7,2),
                         PRIMARY KEY(id),
-                        FOREIGN KEY(group_id) REFERENCES Groups(id),
-                        price decimal(7,2));
+                        FOREIGN KEY(group_id) REFERENCES Groups(id)
+                        );
 
-   
+
 
     create table Admins(
                         id int AUTO_INCREMENT NOT NULL,
@@ -32,8 +33,7 @@
                         surname varchar(100),
                         email varchar(100),
                         password CHAR(64) NOT NULL,
-                        address varchar (255) NOT NULL
-                        ) ;                                         
+                        address varchar (255) NOT NULL);
     
 
     create table Messages(
@@ -52,8 +52,7 @@
                         PRIMARY KEY(id),
                         client_id int NOT NULL,
                         FOREIGN KEY(client_id) REFERENCES Clients(id),
-                        order_status int NOT NULL
-                                                );
+                        order_status int NOT NULL);
      
 
     create table Items_Orders(
@@ -68,8 +67,6 @@
 
     create table Groups(
                         id int AUTO_INCREMENT NOT NULL,
-                        PRIMARY KEY(id),
-                        item_id int NOT NULL,
-                        FOREIGN KEY(item_id) REFERENCES Items(id)
-    )
-    
+                        name varchar(255),
+                        PRIMARY KEY(id));
+

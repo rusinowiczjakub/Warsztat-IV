@@ -1,3 +1,9 @@
+    create table Groups(
+                        id int AUTO_INCREMENT NOT NULL,
+                        name varchar(255),
+                        PRIMARY KEY(id));
+
+
     CREATE TABLE Items(
                         id int AUTO_INCREMENT NOT NULL,
                         name varchar(100) NOT NULL,
@@ -8,8 +14,6 @@
                         PRIMARY KEY(id),
                         FOREIGN KEY(group_id) REFERENCES Groups(id)
                         );
-
-
 
     create table Admins(
                         id int AUTO_INCREMENT NOT NULL,
@@ -65,8 +69,5 @@
                         FOREIGN KEY(item_id) REFERENCES Items(id)
                                                 );
 
-    create table Groups(
-                        id int AUTO_INCREMENT NOT NULL,
-                        name varchar(255),
-                        PRIMARY KEY(id));
+
 

@@ -1,10 +1,14 @@
 <?PHP
 
 
-require 'connection.php';
+require '../connection.php';
 
 $query = file_get_contents('create_database.sql');
 
-$conn->query($query);
+if($conn->query($query)){
+    echo "tables creation successful";
+}else{
+    echo "connection error";
+}
 
 

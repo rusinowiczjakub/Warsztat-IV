@@ -2,15 +2,19 @@
                         id int AUTO_INCREMENT NOT NULL,
                         name varchar(100) NOT NULL,
                         description text NOT NULL,
+                        quantity INT,
+                        group_id INT NULL,
                         PRIMARY KEY(id),
-                        price decimal(7,2));                      
+                        FOREIGN KEY(group_id) REFERENCES Groups(id),
+                        price decimal(7,2));
+
    
 
     create table Admins(
                         id int AUTO_INCREMENT NOT NULL,
                         PRIMARY KEY(id),
                         email varchar(100) NOT NULL,
-                        password CHAR(64) NOT NULL)  ;                    
+                        password CHAR(64) NOT NULL);
      
 
     create table Images(
@@ -61,4 +65,11 @@
                         FOREIGN KEY(order_id) REFERENCES Orders(id),
                         FOREIGN KEY(item_id) REFERENCES Items(id)
                                                 );
+
+    create table Groups(
+                        id int AUTO_INCREMENT NOT NULL,
+                        PRIMARY KEY(id),
+                        item_id int NOT NULL,
+                        FOREIGN KEY(item_id) REFERENCES Items(id)
+    )
     

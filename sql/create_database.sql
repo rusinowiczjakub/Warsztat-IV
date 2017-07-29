@@ -6,8 +6,8 @@
 
     CREATE TABLE Items(
                         id int AUTO_INCREMENT NOT NULL,
-                        name varchar(100) NOT NULL,
-                        description text NOT NULL,
+                        name varchar(100) NULL,
+                        description text NULL,
                         quantity INT,
                         group_id INT NULL,
                         price decimal(7,2),
@@ -33,11 +33,11 @@
     create table Clients(
                         id int AUTO_INCREMENT NOT NULL,
                         PRIMARY KEY(id),
-                        name varchar(100) NOT NULL,
-                        surname varchar(100),
-                        email varchar(100),
+                        name varchar(100) NULL,
+                        surname varchar(100) NULL,
+                        email varchar(100) NOT NULL,
                         password CHAR(64) NOT NULL,
-                        address varchar (255) NOT NULL);
+                        address varchar (255) NULL);
     
 
     create table Messages(

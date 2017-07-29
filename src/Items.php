@@ -1,11 +1,12 @@
 <?php
 
-include __DIR__.'/../connection.php';
+require __DIR__.'/../connection.php';
+require __DIR__.'/../config.php';
 
 Class Items{
 
     static private $conn;
-    private $id;
+    private $id = -1;
     private $name;
     private $price;
     private $description;
@@ -31,99 +32,101 @@ Class Items{
     public static function SetConnection($conn){
         Items::$conn = $conn;
     }
-    public function saveToDB(PDO $conn)
+    public static function createItem($name, $price, $description, $quantity, $groupId)
     {
-        if($this->id = -1){
+        if($id = -1) {
             $sql = 'INSERT INTO Items(name, price, description, quantity, group_id) VALUES(:name, :price, :description, :quantity, :group_id)';
             $stmt = Items::$conn->query($sql);
             $result = $stmt->execute([
-                'name'=>$this->getName(),
-                'price'=>$this->getPrice(),
-                'description'=>$this->getDescription(),
-                'quantity'=>$this->getQuantity(),
-                'group_id'=>$this->getGroupId()
+                'name' => $name,
+                'price' => $price,
+                'description' => $description,
+                'quantity' => $quantity,
+                'group_id' => $groupId
             ]);
-            if($result !== false){
+            if ($result !== false) {
                 $this->id = $conn->lastInsertId();
                 return true;
             }
-        }else{
-            $sql = 'UPDATE Items SET name=:name, price=:price, description=:description, quantity=:quantity, group_id=:group_id WHERE id=:id';
-            $stmt = Items::$conn->prepare($sql);
-            $result = $stmt->execute([
-                'id'=>$this->id,
-                'name'=>$this->name,
-                'price'=>$this->price,
-                'description'=>$this->description,
-                'quantity'=>$this->quantity,
-                'group_id'=>$this->groupId
-            ]);
+        }
+//        }else{
+//            $sql = 'UPDATE Items SET name=:name, price=:price, description=:description, quantity=:quantity, group_id=:group_id WHERE id=:id';
+//            $stmt = Items::$conn->prepare($sql);
+//            $result = $stmt->execute([
+//                'id'=>$this->id,
+//                'name'=>$this->name,
+//                'price'=>$this->price,
+//                'description'=>$this->description,
+//                'quantity'=>$this->quantity,
+//                'group_id'=>$this->groupId
+//            ]);
 
             if($result){
                 return true;
             }
-        }
         return false;
-    }
-
-    public function deleteFromDB(PDO $conn, $id){
-        if($this->id != -1){
-            $sql = 'DELETE FROM Items WHERE id=:id';
-            $stmt = Items::$conn->prepare($sql);
-            $result = $stmt->execute(['id'=>$id]);
-
-            if($result === true){
-                $this->id = -1;
-                return true;
-            }
-        }
-        return FALSE;
-    }
-
-    public function loadItemsById($id)
-    {
-        $stmt=Items::$conn->prepare('SELECT * FROM Items WHERE id=:id');
-        $result=$stmt->execute(['id'=>$id]);
-
-        if($result === true && $stmt->rowCount()>0){
-            $row = $stmt->fetch(PDO::FETCH_ASSOC);
-
-            $loadedItem = new Items();
-            $loadedItem->id = $row['id'];
-            $loadedItem->name = $row['name'];
-            $loadedItem->price = $row['price'];
-            $loadedItem->description = $row['description'];
-            $loadedItem->quantity = $row['quantity'];
-            $loadedItem->groupId = $row['group_id'];
-
-            return $loadedItem;
-        }
-        return NULL;
-    }
-
-    public static function loadAllItems()
-    {
-
-        $result = Items::$conn->query('SELECT * FROM Items');
-        $res = [];
-
-        if($result !== false && $result->rowCount()>0){
-            foreach($result as $row){
-                $loadedItem = new Item();
-                $loadedItem->id = $row['id'];
-                $loadedItem->name = $row['name'];
-                $loadedItem->price = $row['price'];
-                $loadedItem->description = $row['description'];
-                $loadedItem->quantity = $row['quantity'];
-                $loadedItem->groupId = $row['group_id'];
-
-                $res[] = $loadedItem;
-            }
-            return $res;
         }
 
-        return $res;
-    }
+
+
+//    public function deleteFromDB(PDO $conn, $id){
+//        if($this->id != -1){
+//            $sql = 'DELETE FROM Items WHERE id=:id';
+//            $stmt = Items::$conn->prepare($sql);
+//            $result = $stmt->execute(['id'=>$id]);
+//
+//            if($result === true){
+//                $this->id = -1;
+//                return true;
+//            }
+//        }
+//        return FALSE;
+//    }
+//
+//    public function loadItemsById($id)
+//    {
+//        $stmt=Items::$conn->prepare('SELECT * FROM Items WHERE id=:id');
+//        $result=$stmt->execute(['id'=>$id]);
+//
+//        if($result === true && $stmt->rowCount()>0){
+//            $row = $stmt->fetch(PDO::FETCH_ASSOC);
+//
+//            $loadedItem = new Items();
+//            $loadedItem->id = $row['id'];
+//            $loadedItem->name = $row['name'];
+//            $loadedItem->price = $row['price'];
+//            $loadedItem->description = $row['description'];
+//            $loadedItem->quantity = $row['quantity'];
+//            $loadedItem->groupId = $row['group_id'];
+//
+//            return $loadedItem;
+//        }
+//        return NULL;
+//    }
+//
+//    public static function loadAllItems()
+//    {
+//
+//        $result = Items::$conn->query('SELECT * FROM Items');
+//        $res = [];
+//
+//        if($result !== false && $result->rowCount()>0){
+//            foreach($result as $row){
+//                $loadedItem = new Item();
+//                $loadedItem->id = $row['id'];
+//                $loadedItem->name = $row['name'];
+//                $loadedItem->price = $row['price'];
+//                $loadedItem->description = $row['description'];
+//                $loadedItem->quantity = $row['quantity'];
+//                $loadedItem->groupId = $row['group_id'];
+//
+//                $res[] = $loadedItem;
+//            }
+//            return $res;
+//        }
+//
+//        return $res;
+//    }
 
 
     //Getters and Setters
@@ -224,3 +227,5 @@ Class Items{
     }
 
 }
+
+Items::createItem("zelazko", 10, "fajne", 3, 1);

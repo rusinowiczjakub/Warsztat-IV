@@ -1,20 +1,15 @@
 <?php
 
-require __DIR__."/config.php";
-//require_once __DIR__."/src/User.php";
-require_once __DIR__."/src/Items.php";
-//require_once __DIR__."/src/Admin.php";
-//require_once __DIR__."/src/Order.php";
+require "config.php";
+
+$servername = $configDB['servername'];
+$dbName = $configDB['baseName'];
+$username = $configDB['username'];
+$pass = $configDB['password'];
 
 
-
-
-//User::SetConnection($conn);
-Items::SetConnection($conn);
-//Admin::SetConnection($conn);
-//Order::setConnection($conn);
-
-
-
-
-?>
+$conn = new PDO("mysql:host=$servername;dbname=$dbName", "$username", "$pass");
+// Sprawdzamy czy połączcenie się udało
+if (!$conn) {
+    die("Polaczenie nieudane.");
+}

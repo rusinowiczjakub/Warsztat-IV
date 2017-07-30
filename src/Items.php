@@ -2,7 +2,7 @@
 <?php
 
 require __DIR__.'/../connection.php';
-require __DIR__.'/render.php';
+require_once __DIR__.'/render.php';
 
 Class Items{
 
@@ -81,12 +81,37 @@ Class Items{
     {
         $sql = 'SELECT * FROM Items';
         $stmt = $conn->query($sql);
-        $result = $stmt->fetchAll();
+        $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+        $arr = [];
+        $html = "";
+        foreach($result as $key){
+            $arr['id']=$key['id'];
+            $arr['name']=$key['name'];
+            $arr['description']=$key['description'];
+            $arr['price']=$key['price'];
+            $arr['quantity']=$key['quantity'];
+            $html.= render('../html/items.html',$arr);
+        }
+        return $html;
+    }
+
+    public static function showItemsByGroups(PDO $conn, $groupId)
+    {
+        $sql = 'SELECT * FROM Items WHERE group_id=:group_id';
+        $stmt = $conn->prepare($sql);
+        $stmt->execute(['group_id'=>$groupId]);
+        $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
         $arr = [];
         $html ="";
         foreach($result as $key){
+            $arr['id']=$key['id'];
             $arr['name']=$key['name'];
+            $arr['description']=$key['description'];
+            $arr['price']=$key['price'];
+            $arr['quantity']=$key['quantity'];
+
             $html.= render('../html/items.html',$arr);
         }
 
@@ -99,7 +124,7 @@ Class Items{
         $stmt = $conn->prepare($sql);
         $stmt->execute(['id'=>$id]);
         $row = $stmt->fetch(PDO::FETCH_ASSOC);
-        return render("../html/items.html", $row);
+        return render("../html/singleItemPage.html", $row);
 
     }
 
@@ -204,8 +229,3 @@ Class Items{
     }
 
 }
-
-
-
-Items::deleteItem($conn, 3);
-

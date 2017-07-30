@@ -12,7 +12,7 @@
                         group_id INT NULL,
                         price decimal(7,2),
                         PRIMARY KEY(id),
-                        FOREIGN KEY(group_id) REFERENCES Groups(id)
+                        FOREIGN KEY(group_id) REFERENCES Groups(id) ON DELETE CASCADE
                         );
 
     create table Admins(

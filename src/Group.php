@@ -1,11 +1,11 @@
 <?php
 
 require __DIR__."/../connection.php";
-require __DIR__."/render.php";
+require_once __DIR__."/render.php";
 
 Class Groups
 {
-    private static $id;
+    private $id;
     private $name;
 
     /**
@@ -23,7 +23,7 @@ Class Groups
     {
     $sql = 'SELECT * FROM Groups WHERE id:='.$id;
     $stmt = $conn->prepare($sql);
-    $result = $stmt->execute();
+    $result = $stmt->fetch();
 
     return $result;
     }
@@ -37,7 +37,7 @@ Class Groups
             'name' => $this->name
         ]);
         if($result !== false){
-            $id = $conn->lastInsertId();
+            $this->id = $conn->lastInsertId();
             return true;
         }
         return false;
@@ -54,6 +54,7 @@ Class Groups
         $html="";
         foreach ($result as $key) {
             $arr['name']=$key['name'];
+            $arr['id']=$key['id'];
             $html.= render('../html/groups.html',$arr);
         }
 
@@ -61,14 +62,18 @@ Class Groups
 
     }
 
-    public function deleteGroup(PDO $conn, $id)
+    public static function deleteGroup(PDO $conn, $id)
     {
-    $sql = 'DELETE FROM Groups WHERE id='.$id;
-    $stmt = $conn->prepare($sql);
-    $result = $stmt->execute();
+        if($id != -1 && is_int($id)){
+            $sql = 'DELETE FROM Groups WHERE id='.$id;
+            $stmt = $conn->prepare($sql);
+            $result = $stmt->execute();
 
-    return $result;
+            return $result;
+        }
+        return false;
     }
+
 
 
     //SETTERS AND GETTERS
@@ -108,7 +113,7 @@ Class Groups
 
 
 }
-echo Groups::showGroups($conn);
+//echo Groups::showGroups($conn);
 
 
 

@@ -2,27 +2,10 @@
 
 session_start();
 
-$configDB['servername'] = 'localhost';
-$configDB['baseName'] = 'shop';
-$configDB['username'] = 'root';
-$configDB['password'] = 'coderslab';
+require __DIR__."/../connection.php";
 
-$servername = $configDB['servername'];
-$dbName = $configDB['baseName'];
-$username = $configDB['username'];
-$pass = $configDB['password'];
-
-$conn = new PDO("mysql:host=$servername;dbname=$dbName", "$username", "$pass");
-// Sprawdzamy czy połączcenie się udało
-if (!$conn) {
-    die("Polaczenie nieudane.");
-}
-
-if ($conn->errorCode() != null)
-{
-    die("Polaczenie nieudane. Blad: " .
-        $conn-> errorInfo()[2]);
-}
+require_once __DIR__.'/../src/Admin.php';
+require_once __DIR__.'/../src/Message.php';
 
 if  ($_SERVER['REQUEST_METHOD']=="POST")
 
@@ -32,15 +15,17 @@ if  ($_SERVER['REQUEST_METHOD']=="POST")
         (isset($_POST['adminPassword']))&&
         (!isset($_SESSION['adminlogin']))))
     {
+        $email= $_POST['adminEmail'];
+        $password=$_POST['adminPassword'];
 
         $sql = "SELECT * FROM Admins WHERE email = :email";
         $stmt = $conn->prepare($sql);
-        $stmt->execute(['email' => $_POST['adminEmail']]);
+        $stmt->execute(['email' => $email]);
         $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
         //sprawdzam czy hasło poprawne
 
-        if (count($result) && $_POST['adminPassword'] == $result[0]['password'])
+        if (count($result) && $password == $result[0]['password'])
         {
             echo "hasło poprawne";
             $_SESSION['adminlogin']=$result[0]['id'];
@@ -53,14 +38,17 @@ if  ($_SERVER['REQUEST_METHOD']=="POST")
 
 if (isset($_SESSION['adminlogin']))
 {
-    echo("zalogowany");
+    include("menuAdmin.php");
 
-    $sql = "SELECT * FROM Messages WHERE admin_id = :id";
-    $stmt = $conn->prepare($sql);
-    $stmt->execute(['id' => $_SESSION['adminlogin']]);
-    $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    if (isset($_GET['option']) && $_GET['option'] == 'showmessage'){
+        include("showMessages.php");
+    }
 
-    var_dump($result);
+    if (isset($_GET['option']) && $_GET['option'] == 'newmessage'){
+        include("newMessage.php");
+    }
+
+
 
 }
 else
